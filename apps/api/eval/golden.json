@@ -1,0 +1,98 @@
+[
+  {
+    "id": "golden-01",
+    "message": "Hi, I wanted to check in on invoice #1048 — it has been overdue for two weeks. Could you let me know when the payment will be sent?",
+    "goal": "request_payment",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "high"},
+    "expected_intent": "request_payment",
+    "expected_strategy": "negative_politeness"
+  },
+  {
+    "id": "golden-02",
+    "message": "The extra revisions you asked for are outside the agreed scope. I can do them as a separate paid task, but I can't keep adding unpaid work.",
+    "goal": "set_boundary",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "high"},
+    "expected_intent": "set_boundary",
+    "expected_strategy": "negative_politeness"
+  },
+  {
+    "id": "golden-03",
+    "message": "Could we move the deadline to Friday? I need a bit more time to keep the quality high.",
+    "goal": "negotiate_deadline",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "medium"},
+    "expected_intent": "negotiate_deadline",
+    "expected_strategy": "negative_politeness"
+  },
+  {
+    "id": "golden-04",
+    "message": "I'm not sure I understood the requirements — could you clarify exactly what you need on the homepage?",
+    "goal": "clarify_requirements",
+    "context": {"power": "unknown", "social_distance": "unknown", "imposition": "unknown"},
+    "expected_intent": "clarify_requirements",
+    "expected_strategy": "bald_on_record"
+  },
+  {
+    "id": "golden-05",
+    "message": "I disagree with the last feedback — the design follows the brief we agreed on. Can we talk through what needs to change?",
+    "goal": "resolve_disagreement",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "medium"},
+    "expected_intent": "resolve_disagreement",
+    "expected_strategy": "positive_politeness"
+  },
+  {
+    "id": "golden-06",
+    "message": "Your last message said the work was poor quality, but I've followed every spec. I'd like to understand what specifically didn't work.",
+    "goal": "respond_to_criticism",
+    "context": {"power": "unknown", "social_distance": "high", "imposition": "high"},
+    "expected_intent": "respond_to_criticism",
+    "expected_strategy": "avoidance"
+  },
+  {
+    "id": "golden-07",
+    "message": "My hourly rate for this project is $40 — I can't lower it further, but I'm happy to adjust the scope to fit your budget.",
+    "goal": "negotiate_budget",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "medium"},
+    "expected_intent": "negotiate_budget",
+    "expected_strategy": "negative_politeness"
+  },
+  {
+    "id": "golden-08",
+    "message": "I need the final files today. This has been delayed twice already and our client is waiting.",
+    "goal": "negotiate_deadline",
+    "context": {"power": "unknown", "social_distance": "unknown", "imposition": "high"},
+    "expected_intent": "negotiate_deadline",
+    "expected_strategy": "negative_politeness"
+  },
+  {
+    "id": "golden-09",
+    "message": "To clarify, is the logo supposed to be in the header or the footer? Just send me the files and I'll start.",
+    "goal": "clarify_requirements",
+    "context": {"power": "unknown", "social_distance": "low", "imposition": "low"},
+    "expected_intent": "clarify_requirements",
+    "expected_strategy": "bald_on_record"
+  },
+  {
+    "id": "golden-10",
+    "message": "This is the third time I've asked about payment. The invoice is now a month overdue and I need an answer today.",
+    "goal": "request_payment",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "high"},
+    "expected_intent": "request_payment",
+    "expected_strategy": "negative_politeness"
+  },
+  {
+    "id": "golden-11",
+    "message": "You mentioned the design was wrong, but I'm not sure what's wrong with it. Could we go over the feedback together?",
+    "goal": "respond_to_criticism",
+    "context": {"power": "unknown", "social_distance": "medium", "imposition": "high"},
+    "expected_intent": "respond_to_criticism",
+    "expected_strategy": "off_record"
+  },
+  {
+    "id": "golden-12",
+    "message": "I can't take on the extra pages — my week is already full. I'd be glad to schedule them for next week instead.",
+    "goal": "set_boundary",
+    "context": {"power": "unknown", "social_distance": "low", "imposition": "low"},
+    "expected_intent": "set_boundary",
+    "expected_strategy": "bald_on_record"
+  }
+]
