@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saylient-api"
+version = "0.2.0"
+description = "Saylient AI API — rule-based baseline + LLM provider adapter (Phase 0-2)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110,<1.0",
+    "uvicorn[standard]>=0.29",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+]
+
+# Explicit package list: without it, setuptools' flat-layout discovery
+# finds both `app` and `eval` as top-level packages and refuses the
+# editable install (`pip install -e .[dev]`) that CI runs.
+[tool.setuptools]
+packages = ["app", "app.api", "app.api.v1", "app.core", "app.services"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
