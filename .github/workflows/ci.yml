@@ -1,0 +1,21 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults: {run: {working-directory: apps/api}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install -e .[dev] pip-audit bandit ruff
+      - run: ruff check . && bandit -r app -q
+      - run: pip-audit
+      - run: pytest -q
+  # web: intentionally absent until Phase 4 — apps/web has no package.json
+  # yet (only NOTE.md), so `npm ci` would fail the first push. Re-add
+  # the web job (setup-node, npm ci, lint, typecheck, test, audit)
+  # when the frontend lands (see docs/ROADMAP.md Phase 4).
