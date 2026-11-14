@@ -3,24 +3,38 @@
 Two datasets live here. The **v1 seed** (`seed.jsonl`, 60 examples, old
 schema) is kept for history and for the rule-engine baseline. The
 **v2 dataset** is the training set for Arsalan's own fine-tuned
-politeness LLM: **49,995 examples** built from 500 hand-written seeds
+politeness LLM: **99,990 examples** built from 700 hand-written seeds
 plus deterministic combinatorial expansion.
 
 ## v2 files
 
 | File | Rows | Description |
 |---|---|---|
-| `seeds_v2.jsonl` | 500 | Hand-written seed examples, new schema. Every intent ~45 examples (question_how_to_ask: 50). |
-| `generate_dataset.py` | — | Deterministic generator (seed 42): 110 hand-written template rows (10 per intent) × slot pools (48 names, 22 amounts, 13 day counts, 20 project types, 59 invoice numbers, 12 context clauses) × strategy-weighted sampling. |
-| `splits_v2/train.jsonl` | 42,493 | 85% of the full set, stratified by intent. |
-| `splits_v2/valid.jsonl` | 3,751 | 7.5%, stratified by intent. |
-| `splits_v2/test.jsonl` | 3,751 | 7.5%, stratified by intent. **Never used in training** — not for fitting, not for prompt selection, not for checkpoint choice. |
+| `seeds_v2.jsonl` | 700 | Hand-written seed examples, new schema. question_how_to_ask: 90; others 53–65 each. |
+| `generate_dataset.py` | — | Deterministic generator (seed 42): 165 hand-written template rows (15 per intent) × slot pools (72 names, 36 amounts, 20 day counts, 40 project types, 59 invoice numbers, 20 context clauses) × strategy-weighted sampling. |
+| `splits_v2/train.jsonl` | 84,986 | 85% of the full set, stratified by intent. **Not pushed to GitHub** (about 55 MB — too big for one contents-API call); reproducible exactly from `seeds_v2.jsonl` + `generate_dataset.py`. A 2,000-row sample is pushed as `splits_v2/train_sample_2000.jsonl`. |
+| `splits_v2/valid.jsonl` | 7,502 | 7.5%, stratified by intent. |
+| `splits_v2/test.jsonl` | 7,502 | 7.5%, stratified by intent. **Never used in training** — not for fitting, not for prompt selection, not for checkpoint choice. |
 
 Regenerate (deterministic — same seed, same output):
 
 ```bash
-python ml/data/generate_dataset.py --total 50000 --seed 42
+python ml/data/generate_dataset.py --total 100000 --seed 42
 ```
+
+## v3 expansion (14 Nov 2026)
+
+The dataset grew from 49,995 to 99,990 rows: 200 more hand-written
+seeds (total 700, heavy on `question_how_to_ask` — 40 new — and
+difficult-client cases), 55 new generator templates (10 → 15 per
+intent, including more `off_record` and `bald_on_record` situations),
+and expanded slot pools (48 → 72 names, 22 → 36 amounts, 13 → 20 day
+counts, 20 → 40 project types, 12 → 20 context clauses). Keyword
+baseline on the new test split (7,502 rows): intent accuracy **0.392**,
+strategy accuracy **0.447** (majority class), formality MAE **0.108** —
+lower than the v2 baseline (0.464 / 0.490 / 0.098) because the more
+varied inputs defeat the keyword list, not because the data is worse.
+The fine-tuned model must beat 0.392 / 0.447 / 0.108.
 
 ## v2 schema (one JSON object per line)
 
@@ -59,38 +73,38 @@ assistant (e.g. `"how do I ask for payment politely when the client is
 12 days late?"`). Their `polite_rewrite` is the suggested phrasing to
 send, so the fine-tuned model learns to detect question intent and
 answer with a usable message instead of treating the question as the
-message itself. 4,545 of the 49,995 rows (9.1%) are questions.
+message itself. 9,090 of the 99,990 rows (9.1%) are questions.
 
-## Label balance (full 49,995 rows)
+## Label balance (full 99,990 rows)
 
-Intents are equal by construction (~4,545 each, 9.1% — none below 3%
+Intents are equal by construction (~9,090 each, 9.1% — none below 3%
 or above 25%):
 
 | Intent | Rows | % |
 |---|---|---|
-| payment_request | 4,545 | 9.1 |
-| deadline_negotiation | 4,545 | 9.1 |
-| scope_boundary | 4,545 | 9.1 |
-| revision_request | 4,545 | 9.1 |
-| late_delivery_apology | 4,545 | 9.1 |
-| rate_discussion | 4,545 | 9.1 |
-| follow_up | 4,545 | 9.1 |
-| feedback_handling | 4,545 | 9.1 |
-| question_how_to_ask | 4,545 | 9.1 |
-| greeting | 4,545 | 9.1 |
-| other | 4,545 | 9.1 |
+| payment_request | 9,090 | 9.1 |
+| deadline_negotiation | 9,090 | 9.1 |
+| scope_boundary | 9,090 | 9.1 |
+| revision_request | 9,090 | 9.1 |
+| late_delivery_apology | 9,090 | 9.1 |
+| rate_discussion | 9,090 | 9.1 |
+| follow_up | 9,090 | 9.1 |
+| feedback_handling | 9,090 | 9.1 |
+| question_how_to_ask | 9,090 | 9.1 |
+| greeting | 9,090 | 9.1 |
+| other | 9,090 | 9.1 |
 
 Strategies (strategy-weighted sampling in the generator):
 
 | Strategy | Rows | % |
 |---|---|---|
-| negative_politeness | 23,328 | 46.7 |
-| positive_politeness | 16,201 | 32.4 |
-| off_record | 5,637 | 11.3 |
-| bald_on_record | 4,829 | 9.7 |
+| negative_politeness | 44,882 | 44.9 |
+| positive_politeness | 31,581 | 31.6 |
+| off_record | 12,518 | 12.5 |
+| bald_on_record | 11,009 | 11.0 |
 
-Tones: polite 37.4%, warm 22.8%, firm_polite 18.6%, apologetic 16.6%,
-formal 4.1%, casual 0.6%.
+Tones: polite 34.6%, warm 26.0%, firm_polite 18.8%, apologetic 14.7%,
+formal 5.1%, casual 0.7%.
 
 ## Dedup
 
@@ -100,11 +114,14 @@ formal 4.1%, casual 0.6%.
   stripping only the client name (names are interchangeable slots).
   Amounts, day counts, projects and invoice numbers are kept as
   distinguishing content — they make the situation genuinely different.
-- Spot-check (20 random train rows, seed 7): 20/20 coherent, labels
-  match the situation, rewrites polite and on-topic. Two redundancy
-  bugs found in the first check (repeated channel/timing clause,
-  stacked "thank you for your understanding") were fixed in the
-  generator and the set regenerated.
+- Spot-check (20 random rows, seed 7, v3 set): 20/20 coherent, labels
+  match the situation, rewrites polite and on-topic. Known minor slot
+  artifacts (same class as v2): occasional article slip ("a online
+  shop"), an opening swap that leaves a lowercase continuation
+  ("Hi Bilal! as a thank you..."), and two platform context clauses in
+  one input. Two redundancy bugs found in the first v2 check (repeated
+  channel/timing clause, stacked "thank you for your understanding")
+  were fixed in the generator and the set regenerated.
 
 ## Labelling notes
 
@@ -112,7 +129,7 @@ formal 4.1%, casual 0.6%.
   numbers from real clients, or pasted real conversations. All names
   (`Sarah`, `James`, …), amounts and invoice numbers are fictional.
 - **Seeds are hand-written; expansion is template-based, not
-  LLM-generated.** The 110 generator template rows were authored from
+  LLM-generated.** The 165 generator template rows were authored from
   the seed structures. No synthetic example was bulk-accepted from an
   LLM.
 - **Quality > quantity.** A wrong-strategy example teaches the model
