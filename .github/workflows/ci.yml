@@ -11,9 +11,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.11'}
-      # pip 24.0 (shipped with CPython 3.11) has known vulnerabilities that
-      # pip-audit flags, failing CI before pytest runs. Upgrade it first.
-      - run: python -m pip install --upgrade pip
+      # pip 24.0 / setuptools 79.0.1 (shipped with CPython 3.11) have known
+      # vulnerabilities that pip-audit flags, failing CI before pytest runs.
+      # Upgrade the whole install toolchain first.
+      - run: python -m pip install --upgrade pip setuptools wheel
       - run: pip install -e .[dev] pip-audit bandit ruff
       - run: ruff check . && bandit -r app -q
       - run: pip-audit
