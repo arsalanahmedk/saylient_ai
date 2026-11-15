@@ -1,71 +1,140 @@
-# SaylientAI
+![Saylient AI — Say It Right. Every Time.](.github/assets/banner.png)
 
-**Say It Right. Every Time.**
+<p align="center">
+  <a href="https://github.com/arsalanahmedk/saylient_ai/actions/workflows/ci.yml"><img src="https://github.com/arsalanahmedk/saylient_ai/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/python-3.11-blue?logo=python&logoColor=white" alt="Python 3.11">
+  <img src="https://img.shields.io/badge/FastAPI-0.1xx-009688?logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/dataset-99%2C990%20rows-8B5CF6" alt="Dataset: 99,990 rows">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT">
+</p>
 
-SaylientAI is an AI-based client communication assistant for freelancers. It helps them write polite, clear and professional replies in difficult situations (late payment, deadline negotiation, scope creep, disputes) and explains the linguistic strategy used, based on Brown and Levinson's Politeness Theory (1987).
+<h3 align="center">Say It Right. Every Time.</h3>
 
-## Components
+<p align="center">
+Saylient AI is an AI assistant for freelancers that rewrites difficult client
+messages — late payments, deadline talks, scope creep, disputes — into polite,
+clear and professional replies, and explains <i>why</i> the rewrite works,
+using Brown &amp; Levinson's Politeness Theory (1987).
+</p>
 
-| Component | Path | Stack |
-|---|---|---|
-| Web app | `apps/web` | React / Next.js, TypeScript, Tailwind, Framer Motion |
-| Browser extension (side panel) | `apps/extension` | Chrome Manifest V3, React, TypeScript |
-| API | `apps/api` | Python, FastAPI, PostgreSQL, Redis |
-| LLM (fine-tuned) | `ml/` | PyTorch, Hugging Face, PEFT (QLoRA), vLLM / llama.cpp |
-| Shared types | `packages/shared` | TypeScript |
-| Docs | `docs/` | Markdown |
+---
 
-## Quick start (development)
+## ✨ See it in action
 
-**Phase 0–2 status (2026-11-13):** the API baseline and the ML seed work
-are done and tested in staging; the web app and the extension are
-placeholders (`apps/web/NOTE.md`, `apps/extension/NOTE.md`) until
-Phases 4–5. Nothing here is pushed to GitHub yet.
+**You write:**
 
-**API contract (Option A, 2026-11-13):** the code follows
-`docs/openapi.yaml` exactly — request field `text` (max 4,000 chars),
-free-text `goal`, replies as `{tone, text}` objects + `suggestion_id` +
-integer `score`, spec analyze shape (`scenario`, `face_threat`,
-`detected_strategy`, `issues`), 16 KB body cap, spec strategy enum
-(the engine's internal `avoidance` maps to `off_record` at the API
-boundary). Auth, history, settings, feedback, export and account
-deletion are **planned for a later phase, not implemented** — the API
-is stateless in Phase 0–2 (see `docs/API_SPEC.md`, "Phased
-endpoints").
+> "You still haven't paid invoice #1048. Pay now."
+
+**Saylient suggests** (scenario: `late_payment`, strategy: `negative_politeness`, score: 80/100):
+
+| Tone | Reply |
+|---|---|
+| 😊 Polite | "Hi! Just a friendly reminder that invoice #1048 is still pending. Could you please let me know when it will be processed? Thank you!" |
+| 🤝 Friendly | "Hey! Hope you're doing well — quick nudge on invoice #1048. Whenever you get a chance to send the payment, I'd really appreciate it." |
+| 💼 Firm | "Hi, following up on invoice #1048, which is now overdue. Please arrange payment at your earliest convenience so we can keep the project on track." |
+
+Every suggestion also explains the strategy it used — so you learn the skill, not just copy the text.
+
+## 🚀 What it does
+
+- **3 tones, 1 click** — polite, friendly and firm rewrites for any tricky message
+- **Knows the situation** — detects the scenario (late payment, scope creep, rude client…) and the face-threat level
+- **Explains itself** — every reply comes with the politeness strategy behind it
+- **Auto-analyze (planned)** — the extension will read the conversation and suggest replies by itself. It **never** sends anything without your click
+- **Works offline too** — a rule-based engine answers instantly when no LLM is available
+
+## 🧠 How it works
+
+```mermaid
+flowchart LR
+    A["Your message"] --> B["POST /v1/suggest"]
+    B --> C{"LLM available?"}
+    C -->|"Yes: Gemini Flash / Groq"| D["LLM adapter"]
+    C -->|"No / quota hit"| E["Rule-based engine"]
+    D --> F["3 replies + score + explanation"]
+    E --> F
+```
+
+- **Live inference:** Google Gemini Flash (primary, free tier) with Groq `gpt-oss-120b` as fallback — one OpenAI-compatible adapter, no vendor lock-in. See [`docs/LLM_CHOICE.md`](docs/LLM_CHOICE.md).
+- **Fine-tuned model (the research):** Qwen2.5-3B-Instruct + QLoRA, trained on our own politeness dataset — the FYP contribution. See [`ml/training/train_qlora.py`](ml/training/train_qlora.py).
+- **Always honest fallback:** if the LLM is down or rate-limited, the rule engine answers and the response says so (`source: rule_based`, `llm_status`).
+
+## 🗃️ The dataset — 99,990 rows
+
+| Split | Rows | Per intent |
+|---|---:|---:|
+| Train | 84,986 | 7,727 |
+| Validation | 7,502 | 682 |
+| Test | 7,502 | 682 |
+| **Total** | **99,990** | **9,090** |
+
+10 scenarios × 11 intents, built from 700 hand-written seeds + 165 templates.
+Keyword baseline on the full test set (the bar the fine-tuned model must beat):
+intent F1 **0.392**, strategy F1 **0.447**. See [`ml/data/README.md`](ml/data/README.md).
+
+## ⚡ Quick start
 
 ```bash
 cp .env.example .env          # fill in values, never commit .env
-# LLM (optional): set AI_PROVIDER=gemini + AI_API_KEY from Google AI Studio
-# (free, no card). Without a key the API still runs — rule-based only.
+# LLM (optional): set AI_PROVIDER=gemini + AI_API_KEY from Google AI Studio (free, no card)
+# Without a key the API still runs — rule-based only.
 cd apps/api && pip install -r requirements.txt && uvicorn app.main:app --reload
 # API at http://127.0.0.1:8000 — GET /health, POST /v1/suggest, POST /v1/analyze
 ```
 
 ```bash
-cd apps/api && pip install -e .[dev] && pytest -v   # 60 tests, incl. golden set 12/12
-python -m ml.evaluation.metrics --split --seed 42  # seed evaluation + 80/10/10 splits
+cd apps/api && pip install -e .[dev] && pytest -q   # 60 tests, incl. golden set 12/12
 ```
 
-**Fine-tuning (later, Phase 3):** `ml/training/train_qlora.py` is NOT RUN —
-it needs a free Colab T4 and the full reviewed dataset (1,500–4,000
-examples; the 60-row seed is a format sample only). See
-`ml/training/train_qlora.py` header and `ml/data/README.md`.
+```bash
+# Try it
+curl -X POST http://127.0.0.1:8000/v1/suggest \
+  -H "Content-Type: application/json" \
+  -d '{"text": "You still haven'"'"'t paid invoice #1048. Pay now."}'
+```
 
-**Measured baselines (2026-11-13, seed set, n=60):** rule-based engine —
-JSON validity 1.0, strategy macro-F1 0.24 vs seed labels, mean politeness
-score 67.0, mean latency 0.7 ms. The low strategy F1 is the honest
-baseline the fine-tuned model must beat: the keyword rules default to
-`negative_politeness` and rarely predict the other strategies.
+**API contract:** request field `text` (max 4,000 chars), optional free-text `goal`;
+replies are `{tone, text}` objects + `suggestion_id` + integer `score`; 16 KB body
+cap. Auth, history, settings, feedback, export and account deletion are
+**planned for a later phase, not implemented** — the API is stateless for now.
+Full spec: [`docs/API_SPEC.md`](docs/API_SPEC.md) and [`docs/openapi.yaml`](docs/openapi.yaml).
 
-## Documentation
+## 📁 Project structure
 
-Start with `docs/PRD.md`, then `docs/ARCHITECTURE.md`, `docs/SECURITY.md`,
-`docs/LLM_CHOICE.md` and `docs/ROADMAP.md`.
+```
+saylient_ai/
+├── apps/
+│   ├── api/            # FastAPI backend — rule engine, LLM adapter, tests (CI ✅)
+│   ├── web/            # Web app — placeholder until Phase 4
+│   └── extension/      # Chrome extension (side panel) — placeholder until Phase 5
+├── docs/               # PRD, SRS, architecture, security, API spec, roadmap
+├── ml/
+│   ├── data/           # Dataset v3 — 99,990 rows + generator + splits
+│   ├── evaluation/     # Metrics + baselines
+│   └── training/       # QLoRA training script + Colab notebook
+└── packages/shared/    # Shared types (later)
+```
 
-## Team
+## 🗺️ Roadmap
+
+- [x] **Phase 0–2** — API baseline, rule engine, LLM adapter, seed dataset, CI
+- [x] **Dataset v3** — 99,990 rows, baselines measured
+- [ ] **Phase 3** — Fine-tune Qwen2.5-3B (QLoRA) on Colab T4 — *waiting on GPU*
+- [ ] **Phase 4** — Web app (React + Tailwind)
+- [ ] **Phase 5** — Chrome extension with auto-analyze + auto-suggest (never auto-send)
+
+## 📚 Documentation
+
+Start with [`docs/PRD.md`](docs/PRD.md), then
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
+[`docs/SECURITY.md`](docs/SECURITY.md),
+[`docs/LLM_CHOICE.md`](docs/LLM_CHOICE.md) and
+[`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+## 👥 Team
 
 [Team member names, registration numbers] | Supervisor: [Name] | Collaborating department: English Linguistics
 
-## License
+## 📄 License
 
-MIT, see `LICENSE`.
+MIT, see [`LICENSE`](LICENSE).
