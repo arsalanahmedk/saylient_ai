@@ -87,6 +87,22 @@ cd apps/api && pip install -e .[dev] && pytest -q   # 60 tests, incl. golden set
 ```
 
 ```bash
+# Web app (Phase 4, Neumorphism design, no build step)
+# 1) Backend:
+cd apps/api && uvicorn app.main:app --reload   # API on :8000 (rule-based without an AI key)
+# 2) Frontend:
+python3 -m http.server 5173 --directory apps/web
+# open http://localhost:5173 — full site: animated hero, live demo,
+# Features / Theory (overview) / About / Extension / Log in pages.
+# The demo is wired to the real API (GET /health, POST /v1/suggest,
+# POST /v1/analyze, configured in apps/web/config.js, default
+# http://localhost:8000, overridable with ?api=<url>); when the API
+# is down it falls back to the built-in demo — never an error.
+# The Extension tab is honest "Coming soon": the Phase 5 extension
+# build does not exist yet, so there is no download link.
+```
+
+```bash
 # Try it
 curl -X POST http://127.0.0.1:8000/v1/suggest \
   -H "Content-Type: application/json" \
@@ -105,7 +121,7 @@ Full spec: [`docs/API_SPEC.md`](docs/API_SPEC.md) and [`docs/openapi.yaml`](docs
 saylient_ai/
 ├── apps/
 │   ├── api/            # FastAPI backend — rule engine, LLM adapter, tests (CI ✅)
-│   ├── web/            # Web app — placeholder until Phase 4
+│   ├── web/            # Web app — Neumorphism frontend (Phase 4 ✅, static, no build step)
 │   └── extension/      # Chrome extension (side panel) — placeholder until Phase 5
 ├── docs/               # PRD, SRS, architecture, security, API spec, roadmap
 ├── ml/
@@ -120,7 +136,7 @@ saylient_ai/
 - [x] **Phase 0–2** — API baseline, rule engine, LLM adapter, seed dataset, CI
 - [x] **Dataset v3** — 99,990 rows, baselines measured
 - [ ] **Phase 3** — Fine-tune Qwen2.5-3B (QLoRA) on Colab T4 — *waiting on GPU*
-- [ ] **Phase 4** — Web app (React + Tailwind)
+- [x] **Phase 4** — Web app (Neumorphism design, static frontend in `apps/web/` — full site: animated hero, live demo wired to the real API, Features / Theory / About / Extension / Log in pages; open it directly or serve it; calls the API when available, built-in demo otherwise)
 - [ ] **Phase 5** — Chrome extension with auto-analyze + auto-suggest (never auto-send)
 
 ## 📚 Documentation
