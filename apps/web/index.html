@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="Saylient AI rewrites difficult client messages into polite, clear and professional replies. You review, you send." />
+    <link rel="icon" href="data:," />
+    <title>Saylient AI — Say It Right. Every Time.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ================= NAV ================= -->
+    <nav class="nav" aria-label="Main">
+      <div class="nav-in">
+        <a class="brand-lock" href="#/home" data-nav="home">
+          <span class="brand-mark neu-sm" aria-hidden="true">S</span>
+          <span class="brand">Saylient AI<small>TONE ASSISTANT FOR EVERY CHAT</small></span>
+        </a>
+        <div class="nav-links">
+          <button type="button" class="nav-link" data-nav="home" aria-current="page">Home</button>
+          <button type="button" class="nav-link" data-nav="features">Features</button>
+          <button type="button" class="nav-link" data-nav="theory">Theory</button>
+          <button type="button" class="nav-link" data-nav="about">About</button>
+          <button type="button" class="nav-link" data-nav="extension">Extension</button>
+          <button type="button" class="theme-btn" id="themeToggle" aria-label="Switch to dark mode" aria-pressed="false" title="Dark / light mode">
+            <svg class="icon-moon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+          <button type="button" class="btn btn-primary nav-cta" data-nav="login">Log in</button>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- ================= HOME ================= -->
+      <div class="view" id="view-home">
+        <section class="hero">
+          <div class="deco deco-1" aria-hidden="true"></div>
+          <div class="deco deco-2" aria-hidden="true"></div>
+          <div class="deco deco-3" aria-hidden="true"></div>
+          <div class="wrap">
+            <div class="hero-grid">
+              <div class="hero-copy">
+                <span class="hero-badge neu-sm"><span class="pulse-dot" aria-hidden="true"></span>Works inside the chats you already use</span>
+                <h1>Rough drafts in.<br /><span class="accent rotator" id="rotator">Polished</span> replies out.</h1>
+                <p class="hero-sub">Saylient rewrites your message in the right tone — professional, friendly or firm — before you send it. You review, you send.</p>
+                <div class="hero-cta">
+                  <button type="button" class="btn btn-primary" data-scroll="demo">Try the live demo</button>
+                  <button type="button" class="btn btn-ghost neu-sm" data-nav="features">See features</button>
+                </div>
+                <div class="hero-points">
+                  <span class="hero-point"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Never auto-sends</span>
+                  <span class="hero-point"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>14 chat &amp; work apps</span>
+                  <span class="hero-point"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Up to 2,000 characters</span>
+                </div>
+              </div>
+
+              <div class="hero-stage">
+                <div class="chat-mock neu" role="img" aria-label="Animation: a rough draft about an unpaid invoice is rewritten into a polite, professional reply.">
+                  <div class="chat-head">
+                    <span class="chat-avatar neu-inset" aria-hidden="true">S</span>
+                    <div><b>Saylient Assistant</b><span>Floating panel · any chat app</span></div>
+                    <span class="chat-live"><i aria-hidden="true"></i>LIVE</span>
+                  </div>
+                  <div class="bubble bubble-draft neu-inset">
+                    <small>Your draft</small>
+                    <span class="txt" id="typeDraft"></span><span class="caret" id="draftCaret" aria-hidden="true"></span>
+                  </div>
+                  <div class="mock-arrow" aria-hidden="true">
+                    <div class="mock-tones">
+                      <span class="mock-tone" data-mtone="professional">Professional</span>
+                      <span class="mock-tone" data-mtone="friendly">Friendly</span>
+                      <span class="mock-tone" data-mtone="firm">Firm</span>
+                      <span class="mock-tone" data-mtone="short">Short</span>
+                    </div>
+                    <span class="line"></span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"/><path d="m6 14 6 6 6-6"/></svg>
+                  </div>
+                  <div class="bubble bubble-out">
+                    <small>Polished reply</small>
+                    <span class="txt" id="typeOut"></span><span class="caret" id="outCaret" aria-hidden="true" style="display:none"></span>
+                  </div>
+                </div>
+                <span class="float-chip chip-a neu-sm"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>Tone matched</span>
+                <span class="float-chip chip-b neu-sm"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-8 7.5S4 18 4 13V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/><path d="m9 12 2 2 4-4"/></svg>You stay in control</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="marquee-band">
+          <div class="wrap">
+            <p class="marquee-label">One assistant across every conversation</p>
+          </div>
+          <div class="marquee" aria-label="Supported apps: WhatsApp, Instagram, Messenger, Telegram, Snapchat, TikTok, Discord, X, Gmail, Slack, LinkedIn, Teams, Upwork, Fiverr">
+            <div class="marquee-track" id="mqTrack"></div>
+          </div>
+        </div>
+
+        <section class="section">
+          <div class="wrap">
+            <div class="section-head reveal">
+              <h2>Built for the messages that matter</h2>
+              <p>The overdue invoice, the difficult client, the reply you keep re-typing. Saylient handles the wording — you keep the decision.</p>
+            </div>
+            <div class="feat-grid">
+              <article class="feat neu reveal">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+                <h3>Four tones, one tap</h3>
+                <p>Professional, Friendly, Firm or Short. The same draft, re-voiced for whoever is reading it.</p>
+              </article>
+              <article class="feat neu reveal">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+                <h3>Knows the intent</h3>
+                <p>Understands what your message is trying to do — a reminder, an apology, a follow-up — so the rewrite fits the situation.</p>
+              </article>
+              <article class="feat neu reveal">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M8 21h8"/><path d="M12 18v3"/></svg></div>
+                <h3>Floats over any chat</h3>
+                <p>A small panel that sits on top of WhatsApp, Gmail, Slack and 11 more apps — no copy-pasting between tabs.</p>
+              </article>
+              <article class="feat neu reveal">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+                <h3>Never auto-sends</h3>
+                <p>Saylient only suggests. Nothing leaves your account until you read it and press send yourself.</p>
+              </article>
+              <article class="feat neu reveal">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5z"/></svg></div>
+                <h3>Fast, even offline-ish</h3>
+                <p>A rule engine answers instantly; the AI model steps in only when a message needs real nuance.</p>
+              </article>
+              <article class="feat neu reveal">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 4.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg></div>
+                <h3>Grounded in politeness theory</h3>
+                <p>Rewrites follow Brown &amp; Levinson's face-saving strategies, not random paraphrasing.</p>
+              </article>
+            </div>
+            <button type="button" class="text-link" data-nav="features">Explore all features
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+        </section>
+
+        <section class="section" id="demo">
+          <div class="wrap">
+            <div class="demo neu reveal">
+              <div class="demo-head">
+                <h2>Try it</h2>
+                <p id="apiStatus">Demo runs in your browser — nothing is sent anywhere.</p>
+              </div>
+
+              <label class="field-label" for="draft">Your draft</label>
+              <textarea id="draft" class="neu-inset" maxlength="2000">hi, invoice #1048 is still unpaid. plz pay asap, its been 2 weeks</textarea>
+              <div class="char-row"><span class="char-count" id="charCount"></span></div>
+
+              <span class="field-label" id="toneLabel">Tone</span>
+              <div class="tones" role="group" aria-labelledby="toneLabel">
+                <button type="button" class="tone" data-tone="professional" aria-pressed="true">Professional</button>
+                <button type="button" class="tone" data-tone="friendly" aria-pressed="false">Friendly</button>
+                <button type="button" class="tone" data-tone="firm" aria-pressed="false">Firm</button>
+                <button type="button" class="tone" data-tone="short" aria-pressed="false">Short</button>
+              </div>
+
+              <div class="demo-actions">
+                <button type="button" class="btn btn-primary" id="polishBtn">Polish my reply</button>
+              </div>
+
+              <span class="field-label">Polished reply</span>
+              <div class="output-box neu-inset" aria-live="polite">
+                <p class="placeholder" id="outputText">Your polished reply will appear here.</p>
+              </div>
+              <p class="output-meta" id="outputMeta" hidden></p>
+              <div class="output-foot">
+                <button type="button" class="btn btn-ghost neu-sm" id="copyBtn" disabled>Copy reply</button>
+                <span class="copy-note" id="copyNote">Copied — paste it anywhere.</span>
+              </div>
+
+              <p class="demo-note">Saylient suggests. It never sends a message for you.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="how">
+          <div class="wrap">
+            <div class="section-head reveal">
+              <h2>How it works</h2>
+              <p>Three steps, inside the chat window you are already typing in.</p>
+            </div>
+            <div class="steps">
+              <div class="step neu reveal">
+                <div class="step-num neu-inset">1</div>
+                <h3>Write your draft</h3>
+                <p>Type it the fast, rough way — in any chat app, up to 2,000 characters.</p>
+              </div>
+              <div class="step neu reveal">
+                <div class="step-num neu-inset">2</div>
+                <h3>Pick a tone</h3>
+                <p>Professional, friendly, firm or short. Saylient rewrites it in one tap.</p>
+              </div>
+              <div class="step neu reveal">
+                <div class="step-num neu-inset">3</div>
+                <h3>Review &amp; send</h3>
+                <p>Read the suggestion, edit if you like, and send it yourself.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="wrap">
+            <div class="section-head reveal">
+              <h2>Questions, answered</h2>
+            </div>
+            <div class="faq-list">
+              <details class="faq neu-sm reveal">
+                <summary>Does Saylient send messages for me?<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+                <div class="faq-body"><p>No — never. Saylient only suggests a polished version of your draft. You read it, edit it if you want, and send it yourself.</p></div>
+              </details>
+              <details class="faq neu-sm reveal">
+                <summary>Which apps does it work with?<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+                <div class="faq-body"><p>The floating panel is built for 14 apps: WhatsApp, Instagram, Messenger, Telegram, Snapchat, TikTok, Discord, X, Gmail, Slack, LinkedIn, Microsoft Teams, Upwork and Fiverr.</p></div>
+              </details>
+              <details class="faq neu-sm reveal">
+                <summary>How does it choose the wording?<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+                <div class="faq-body"><p>A fast rule engine handles everyday rewrites instantly. When a message needs nuance, the AI model takes over — guided by politeness theory, so requests stay firm without sounding rude.</p></div>
+              </details>
+              <details class="faq neu-sm reveal">
+                <summary>Is there a length limit?<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+                <div class="faq-body"><p>Drafts can be up to 2,000 characters — enough for a full email paragraph or a long chat reply.</p></div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="wrap">
+            <div class="cta-band neu reveal">
+              <h2>Say it the way you meant it.</h2>
+              <p>Create an account to use Saylient in your own chats — or test the demo first, no sign-up needed.</p>
+              <div class="hero-cta">
+                <button type="button" class="btn btn-primary" data-nav="login" data-auth-mode="signup">Create free account</button>
+                <button type="button" class="btn btn-ghost neu-sm" data-scroll="demo">Try the demo</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= FEATURES ================= -->
+      <div class="view" id="view-features" hidden>
+        <div class="wrap">
+          <div class="page-head">
+            <h1>Everything Saylient does</h1>
+            <p>One small panel, four tones, and a model that understands what your message is trying to do — before it fixes how it sounds.</p>
+          </div>
+
+          <section class="section">
+            <div class="section-head">
+              <h2>The four tones</h2>
+              <p>Every rewrite keeps your facts and changes only the delivery.</p>
+            </div>
+            <div class="feat-grid">
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg></div>
+                <h3>Professional</h3>
+                <p>Clear, courteous and complete. For clients, managers and anyone you invoice.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c.8 1.2 2 2 3.5 2s2.7-.8 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6"/></svg></div>
+                <h3>Friendly</h3>
+                <p>Warm and easy-going, with the ask still unmistakable. For teammates and regulars.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2.5"/><path d="M12 7.5V21"/><path d="M5 13c0 4.6 3 7.3 7 8 4-.7 7-3.4 7-8"/><path d="M3 13h3M18 13h3"/></svg></div>
+                <h3>Firm</h3>
+                <p>Direct about deadlines and consequences, without crossing into rude. For the second reminder.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5z"/></svg></div>
+                <h3>Short</h3>
+                <p>The same message, half the words. For busy chats where long replies get skipped.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+                <h3>Understands intent</h3>
+                <p>Reminders, apologies, follow-ups, requests and more — the rewrite fits what the message is for.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h13"/></svg></div>
+                <h3>2,000 characters</h3>
+                <p>Room for a full email, not just a one-liner. The counter keeps you inside the limit as you type.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <h2>Works where you already talk</h2>
+              <p>The browser extension floats one small panel over 14 apps — social chats in the morning, client work in the afternoon.</p>
+            </div>
+            <div class="chip-row" id="appsRow"></div>
+          </section>
+
+          <section class="section">
+            <div class="split">
+              <div class="panel neu">
+                <h3>Two engines, one answer</h3>
+                <p>Most drafts are handled by a fast rule engine — slang expanded, casing fixed, greetings and sign-offs added. It answers instantly and needs no connection.</p>
+                <p>When a message carries real tension — a complaint, a negotiation, a delicate apology — the AI model takes over, choosing face-saving wording from politeness theory.</p>
+              </div>
+              <div class="panel neu">
+                <h3>Control is the feature</h3>
+                <ul>
+                  <li>Suggestions only — Saylient never sends for you</li>
+                  <li>Edit the polished reply before you use it</li>
+                  <li>Switch tone and re-polish as many times as you like</li>
+                  <li>Works on drafts up to 2,000 characters</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="cta-band neu">
+              <h2>See it on your own words.</h2>
+              <p>The demo runs the same four tones on any draft you type.</p>
+              <div class="hero-cta">
+                <button type="button" class="btn btn-primary" data-scroll="demo">Open the demo</button>
+                <button type="button" class="btn btn-ghost neu-sm" data-nav="theory">Read the theory</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ================= THEORY ================= -->
+      <div class="view" id="view-theory" hidden>
+        <div class="wrap">
+          <div class="page-head">
+            <h1>Politeness theory, in brief</h1>
+            <p>A short overview of the research behind Saylient's rewrites — just the ideas that shape every suggestion.</p>
+          </div>
+
+          <section class="section">
+            <div class="panel neu">
+              <h3>The idea in one paragraph</h3>
+              <p>Politeness theory (Brown &amp; Levinson, 1987) says every request risks the reader's "face" — their wish to be liked, and to not be imposed on. Saylient keeps your ask intact and softens how it lands, choosing the warmth, hedging or directness that fits the tone you pick. Later work (Watts, 2003) treats politeness as ongoing relational work — which is why Saylient offers tones to choose from, not one fixed rewrite.</p>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="feat-grid">
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c.8 1.2 2 2 3.5 2s2.7-.8 3.5-2"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="2.6"/></svg></div>
+                <h3>Face</h3>
+                <p>Positive face wants approval; negative face wants freedom from pressure. A good rewrite protects both.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h10"/><path d="M4 17h13"/></svg></div>
+                <h3>Five strategies</h3>
+                <p>From bald-on-record directness to a gentle off-record hint — the theory's five ways to deliver an ask.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+                <h3>Four tones</h3>
+                <p>Professional hedges politely, Friendly adds warmth, Firm stays direct but face-saving, Short trims to the act itself.</p>
+              </article>
+            </div>
+            <p class="demo-note">Overview based on Brown &amp; Levinson (1987), Watts (2003), and Locher &amp; Watts (2005).</p>
+          </section>
+
+          <section class="section">
+            <div class="cta-band neu">
+              <h2>Theory you can feel in one reply.</h2>
+              <p>Watch a two-week-overdue invoice reminder turn face-saving in the demo.</p>
+              <div class="hero-cta">
+                <button type="button" class="btn btn-primary" data-scroll="demo">Try the demo</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ================= ABOUT ================= -->
+      <div class="view" id="view-about" hidden>
+        <div class="wrap">
+          <div class="page-head">
+            <h1>About Saylient AI</h1>
+            <p>A tone assistant for the messages people actually struggle with — built as a final-year project, designed like a product.</p>
+          </div>
+
+          <section class="section">
+            <div class="split">
+              <div class="panel neu">
+                <h3>Why it exists</h3>
+                <p>Most people know what they want to say. The hard part is how it lands — especially in text, where tone is easy to misread and hard to take back.</p>
+                <p>Saylient sits between the rough draft and the send button: it rewrites your words in the tone you choose, and then steps aside. You always review. You always send.</p>
+              </div>
+              <div class="panel neu">
+                <h3>How it's built</h3>
+                <ul>
+                  <li>Rule engine for instant, everyday rewrites</li>
+                  <li>AI model for messages that need real nuance</li>
+                  <li>Browser extension with a floating panel on any HTTPS page</li>
+                  <li>Rewrites grounded in Brown &amp; Levinson's politeness theory</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="cta-band neu">
+              <h2>A calmer way to say it.</h2>
+              <p>Try the rewrite demo, or create an account to take Saylient into your own chats.</p>
+              <div class="hero-cta">
+                <button type="button" class="btn btn-primary" data-nav="login" data-auth-mode="signup">Create free account</button>
+                <button type="button" class="btn btn-ghost neu-sm" data-scroll="demo">Try the demo</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ================= EXTENSION ================= -->
+      <div class="view" id="view-extension" hidden>
+        <div class="wrap">
+          <div class="page-head">
+            <h1>The extension, in your chats</h1>
+            <p>One small floating panel that sits on top of the apps you already use. It reads the conversation on your screen, suggests a polished reply — and never sends anything for you.</p>
+          </div>
+
+          <section class="section">
+            <div class="section-head">
+              <h2>What it does</h2>
+              <p>Open any chat, open the panel, and Saylient does the rest. You only ever press send yourself.</p>
+            </div>
+            <div class="feat-grid">
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+                <h3>Reads the screen</h3>
+                <p>The panel analyses the conversation on screen — the situation, the tone, what is at stake — and works out what kind of reply fits.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.6-3 8.4-7 10-4-1.6-7-5.4-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+                <h3>Suggests, never sends</h3>
+                <p>Every suggestion waits for your click. Nothing is inserted or sent automatically — the send button stays yours.</p>
+              </article>
+              <article class="feat neu">
+                <div class="feat-icon neu-inset"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
+                <h3>Four tones, one tap</h3>
+                <p>Professional, Friendly, Firm or Short — the same reply, re-voiced for whoever is reading it.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-head">
+              <h2>Works where you already talk</h2>
+              <p>The panel floats over 14 apps — social chats in the morning, client work in the afternoon.</p>
+            </div>
+            <div class="chip-row" id="appsRowExt"></div>
+          </section>
+
+          <section class="section">
+            <div class="split">
+              <div class="panel neu">
+                <h3>How to install</h3>
+                <p>Two ways, once the first build is published:</p>
+                <ul>
+                  <li><b>Chrome Web Store</b> — one click to install, updates come automatically.</li>
+                  <li><b>Manual install</b> — download the ZIP, open <code>chrome://extensions</code>, turn on Developer mode, and choose &ldquo;Load unpacked&rdquo;.</li>
+                </ul>
+              </div>
+              <div class="panel neu">
+                <h3>Download</h3>
+                <p>The extension build (Phase 5) is not ready yet, so there is no file to download today. This button will work as soon as the first build is published.</p>
+                <button type="button" class="btn btn-primary" disabled>Download extension — Coming soon</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="cta-band neu">
+              <h2>Until then, the web demo is live.</h2>
+              <p>Try the same four tones on any draft — no install needed.</p>
+              <div class="hero-cta">
+                <button type="button" class="btn btn-primary" data-scroll="demo">Try the demo</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ================= LOGIN ================= -->
+      <div class="view" id="view-login" hidden>
+        <div class="wrap">
+          <div class="auth-wrap">
+            <div class="auth-card neu">
+              <aside class="auth-side">
+                <span class="brand-mark neu-sm" aria-hidden="true">S</span>
+                <h2 id="authSideTitle">Welcome back to calmer conversations.</h2>
+                <p>Pick up right where you left off — your tones, your chats, your call on every send.</p>
+                <div class="auth-mini neu-inset" aria-hidden="true">
+                  <small>Before → after</small>
+                  <div class="from">plz pay asap, its been 2 weeks</div>
+                  <div class="to">Could you please arrange payment at your earliest convenience? Thank you.</div>
+                </div>
+              </aside>
+
+              <div class="auth-form">
+                <h2 id="authTitle">Log in to Saylient</h2>
+                <p class="sub" id="authSub">Enter your details to open your workspace.</p>
+
+                <form id="authForm" novalidate>
+                  <div class="auth-field" id="nameField" hidden>
+                    <label for="authName">Full name</label>
+                    <div class="input-wrap">
+                      <input class="auth-input" id="authName" type="text" autocomplete="name" placeholder="Your name" />
+                    </div>
+                  </div>
+                  <div class="auth-field">
+                    <label for="authEmail">Email</label>
+                    <div class="input-wrap">
+                      <input class="auth-input" id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required />
+                    </div>
+                  </div>
+                  <div class="auth-field">
+                    <label for="authPass">Password</label>
+                    <div class="input-wrap">
+                      <input class="auth-input" id="authPass" type="password" autocomplete="current-password" placeholder="Your password" required />
+                      <button type="button" class="eye-btn" id="eyeBtn" aria-label="Show password" aria-pressed="false">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="pw-meter neu-inset" id="pwMeter" hidden>
+                    <div class="pw-bar-wrap" aria-hidden="true"><div class="pw-bar" id="pwBar"></div></div>
+                    <div class="pw-meta"><b id="pwLabel">Start typing a password</b><span id="pwEntropy"></span></div>
+                    <p class="pw-tip" id="pwTip">NLP tip: a passphrase of 4+ real words — like a tiny sentence — is both stronger and easier to remember than random symbols.</p>
+                    <ul class="pw-checks" id="pwChecks">
+                      <li data-check="len">12+ characters</li>
+                      <li data-check="words">3+ words / passphrase</li>
+                      <li data-check="mix">Upper, lower, number &amp; symbol</li>
+                      <li data-check="clean">No common or repeated pattern</li>
+                    </ul>
+                    <div class="pw-gen-row">
+                      <button type="button" class="pw-gen-btn" id="genPassBtn">Generate a strong passphrase</button>
+                      <span class="pw-gen-note">4 random words + number + symbol</span>
+                    </div>
+                    <div class="pw-suggestion neu-sm" id="pwSuggestion">
+                      <code id="pwSuggestionText"></code>
+                      <p>Built from natural words, so you can picture it as a little story and remember it. Only you see this — it is generated in your browser and never sent anywhere.</p>
+                      <button type="button" class="pw-use-btn" id="usePassBtn">Use this passphrase</button>
+                    </div>
+                  </div>
+
+                  <div class="auth-field" id="confirmField" hidden>
+                    <label for="authPassConfirm">Re-enter password</label>
+                    <div class="input-wrap">
+                      <input class="auth-input" id="authPassConfirm" type="password" autocomplete="new-password" placeholder="Type your password again" />
+                      <button type="button" class="eye-btn" id="eyeBtnConfirm" aria-label="Show re-entered password" aria-pressed="false">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                    <p class="field-msg" id="confirmMsg" role="status"></p>
+                  </div>
+                  <div class="auth-row" id="authRow">
+                    <label class="remember"><input type="checkbox" id="rememberMe" /> Remember me</label>
+                    <a class="auth-link" href="#" id="forgotLink">Forgot password?</a>
+                  </div>
+                  <button type="submit" class="btn btn-primary auth-submit" id="authSubmit">Log in</button>
+                </form>
+
+                <div class="divider">OR CONTINUE WITH</div>
+                <button type="button" class="btn btn-ghost neu-sm google-btn" id="googleBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.27c0-.85-.08-1.66-.22-2.45H12v4.64h6.45a5.52 5.52 0 0 1-2.39 3.58v2.97h3.87c2.26-2.09 3.57-5.16 3.57-8.74z"/><path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.87-2.97c-1.07.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.29v3.07A11.99 11.99 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.27 14.31A7.2 7.2 0 0 1 4.89 12c0-.8.14-1.58.38-2.31V6.62H1.29a12 12 0 0 0 0 10.76l3.98-3.07z"/><path fill="#EA4335" d="M12 4.73c1.76 0 3.35.61 4.6 1.8l3.44-3.44A11.98 11.98 0 0 0 12 0 11.99 11.99 0 0 0 1.29 6.62l3.98 3.07C6.22 6.84 8.87 4.73 12 4.73z"/></svg>
+                  Google
+                </button>
+
+                <div class="preview-note" id="authNote" role="status"></div>
+
+                <p class="auth-switch"><span id="switchText">New to Saylient?</span>
+                  <button type="button" id="switchMode">Create an account</button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="site">
+      <div class="foot-in">
+        <div class="foot-grid">
+          <div class="foot-brand">
+            <a class="brand-lock" href="#/home" data-nav="home">
+              <span class="brand-mark neu-sm" aria-hidden="true">S</span>
+              <span class="brand">Saylient AI</span>
+            </a>
+            <p>The tone assistant for every chat. Rough drafts in — polished replies out, with you in control of every send.</p>
+          </div>
+          <div class="foot-col">
+            <h4>Product</h4>
+            <ul>
+              <li><button type="button" class="foot-link" data-nav="features">Features</button></li>
+              <li><button type="button" class="foot-link" data-scroll="demo">Live demo</button></li>
+              <li><button type="button" class="foot-link" data-scroll="how">How it works</button></li>
+              <li><button type="button" class="foot-link" data-nav="theory">Politeness theory</button></li>
+              <li><button type="button" class="foot-link" data-nav="extension">Browser extension</button></li>
+            </ul>
+          </div>
+          <div class="foot-col">
+            <h4>Works with</h4>
+            <ul>
+              <li class="plain">WhatsApp · Instagram</li>
+              <li class="plain">Messenger · Telegram</li>
+              <li class="plain">Gmail · Slack · LinkedIn</li>
+              <li><button type="button" class="foot-link" data-nav="features">All 14 apps</button></li>
+            </ul>
+          </div>
+          <div class="foot-col">
+            <h4>Account</h4>
+            <ul>
+              <li><button type="button" class="foot-link" data-nav="login">Log in</button></li>
+              <li><button type="button" class="foot-link" data-nav="login" data-auth-mode="signup">Create account</button></li>
+              <li><button type="button" class="foot-link" data-nav="about">About Saylient</button></li>
+            </ul>
+          </div>
+        </div>
+        <div class="foot-bottom">
+          <span><b>Saylient AI</b> — a calmer way to say it.</span>
+          <span>Web app (Phase 4) · Suggests only, never auto-sends</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
