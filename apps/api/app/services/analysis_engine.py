@@ -331,9 +331,17 @@ def extract_facts(message: str) -> dict:
     if amount_match:
         amount = f"{amount_match.group(1).rstrip('.')} {amount_match.group(2)}"
         amount = " ".join(amount.split())
+    invoice = None
+    if invoice_match:
+        # Only a real reference counts: digits, or an alnum code containing
+        # digits (e.g. #1048, INV-1048). A plain word after "invoice"
+        # ("invoice when...") must never become "#when".
+        candidate = invoice_match.group(1)
+        if any(ch.isdigit() for ch in candidate):
+            invoice = f"#{candidate}"
     return {
         "date": date_match.group(0) if date_match else None,
-        "invoice": f"#{invoice_match.group(1)}" if invoice_match else None,
+        "invoice": invoice,
         "amount": amount,
     }
 
