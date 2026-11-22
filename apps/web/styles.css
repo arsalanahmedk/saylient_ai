@@ -242,6 +242,30 @@
         50% { transform: translateY(-16px); }
       }
 
+      /* embossed ripple rings — hero background only, behind all content.
+         Pure neumorphism: concentric circles drawn only with the page's own
+         dual shadows, breathing very slowly. */
+      .ring-set { position: absolute; pointer-events: none; z-index: 0; }
+      .ring-set .ring {
+        position: absolute; top: 50%; left: 50%; border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 10px 10px 22px var(--shadow-dark), -10px -10px 22px var(--shadow-light),
+                    inset 8px 8px 18px var(--inset-dark), inset -8px -8px 18px var(--inset-light);
+      }
+      .rings-a { width: 640px; height: 640px; top: -190px; right: -150px; animation: ringBreathe 16s ease-in-out infinite; }
+      .rings-a .r1 { width: 180px; height: 180px; }
+      .rings-a .r2 { width: 330px; height: 330px; }
+      .rings-a .r3 { width: 480px; height: 480px; }
+      .rings-a .r4 { width: 630px; height: 630px; }
+      .rings-b { width: 420px; height: 420px; bottom: -210px; left: -140px; animation: ringBreathe 20s ease-in-out infinite reverse; }
+      .rings-b .r1 { width: 130px; height: 130px; }
+      .rings-b .r2 { width: 250px; height: 250px; }
+      .rings-b .r3 { width: 380px; height: 380px; }
+      @keyframes ringBreathe {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.035); }
+      }
+
       /* ---------- Hero chat mock ---------- */
       .hero-stage { position: relative; z-index: 2; }
       .chat-mock { padding: 22px; position: relative; }
@@ -592,6 +616,7 @@
         .brand small { display: none; }
         .deco-1 { width: 120px; height: 120px; right: -30px; }
         .deco-3 { display: none; }
+        .rings-b { display: none; }
         .chip-a { right: 6px; }
         .auth-form { padding: 30px 22px; }
         .auth-side { padding: 28px 22px; }
