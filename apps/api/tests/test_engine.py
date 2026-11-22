@@ -72,6 +72,54 @@ def test_draft_reuses_only_facts_from_the_message() -> None:
     assert result["limitations"]  # at least one limitation, always
 
 
+def test_invoice_word_after_invoice_is_not_a_reference() -> None:
+    """Regression: 'invoice when...' must not render 'invoice #when'.
+
+    Only a real invoice number/reference (digits, or an alnum code
+    containing digits such as INV-1048) is reused in the draft.
+    """
+    ctx = {"power": "unknown", "social_distance": "medium", "imposition": "high"}
+    # Plain word after "invoice" -> no invoice fact, no "#when" in the draft.
+    assert (
+        analysis_engine.extract_facts(
+            "Could you check in on invoice when the payment will be sent?"
+        )["invoice"]
+        is None
+    )
+    result = analysis_engine.analyze(
+        "Could you check in on invoice when the payment will be sent?",
+        "request_payment",
+        ctx,
+    )
+    assert "#when" not in result["draft"]
+    assert "invoice #" not in result["draft"]
+    # Real references are still kept: bare digits and alnum codes.
+    assert (
+        analysis_engine.extract_facts("Following up on invoice 1048, please.")[
+            "invoice"
+        ]
+        == "#1048"
+    )
+    assert (
+        analysis_engine.extract_facts("Following up on invoice INV-1048, please.")[
+            "invoice"
+        ]
+        == "#INV-1048"
+    )
+    assert (
+        analysis_engine.extract_facts("Following up on invoice #1048, please.")[
+            "invoice"
+        ]
+        == "#1048"
+    )
+    numbered = analysis_engine.analyze(
+        "Following up on invoice INV-1048, please pay soon.",
+        "request_payment",
+        ctx,
+    )
+    assert "#INV-1048" in numbered["draft"]
+
+
 def test_invalid_context_level_raises() -> None:
     with pytest.raises(ValueError):
         analysis_engine.analyze(
