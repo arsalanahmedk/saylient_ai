@@ -1,0 +1,175 @@
+# SaylientAI browser extension (Phase 5)
+
+Chrome / Edge extension, Manifest V3. Opens a side panel that reads the
+conversation on the current page **only while the panel is open**,
+suggests polite replies automatically, and never sends or inserts
+anything on its own.
+
+## Locked decisions (do not re-litigate)
+
+1. **No sign-in.** The extension works without an account. No
+   `chrome.identity`, no tokens, no fake accounts, and no
+   `Authorization` header is ever sent. If the API ever returns 401
+   (not expected with the current API), the panel shows a generic
+   "sign-in is not available in this build" state — never a fake
+   login button.
+2. **Vanilla JavaScript, no build step.** No npm dependencies, no
+   bundler, no remote code, no `eval`. This is a deliberate deviation
+   from the Vite/React plan in the FYP document: zero-build keeps the
+   package directly loadable, CSP-clean and verifiable.
+3. **Minimal permissions: `sidePanel` + `storage` only.** Host
+   permissions cover API origins only (`http://localhost:8000/*`,
+   `http://127.0.0.1:8000/*`, `https://api.saylient.example/*`). No
+   `<all_urls>`, no `identity`, `scripting`, `activeTab`, `tabs` or
+   `cookies`.
+4. **Listener-only content script.** The content script registers
+   listeners at load and does nothing else. It reads the DOM only
+   after an explicit `saylient-extract` message from the open panel,
+   and starts its `MutationObserver` only after `saylient-activate`.
+   The panel connects a `chrome.runtime` port on load and disconnects
+   on unload; the content script disconnects its observer when the
+   port disconnects. Panel closed = zero extraction, zero API calls.
+5. **Auto-analyze.** Opening the panel is the trigger: it extracts,
+   calls `POST /v1/analyze` then `POST /v1/suggest`, with no Analyze
+   click. While open, new messages re-analyze automatically
+   (debounced 800 ms, only if the normalized text changed, at most
+   one API round per 3 seconds). If you edit the textarea, auto
+   re-analysis never overwrites your edit — a "New messages
+   detected — Re-analyze" button appears instead.
+6. **Never auto-send, never auto-insert.** Copy needs a click. Insert
+   needs two clicks (the first arms the button for 5 seconds) and
+   only writes text into the compose box. Nothing ever presses Enter,
+   clicks Send, or submits anything.
+7. **Redaction before sending.** Emails, phone numbers, card numbers,
+   IBANs and Pakistani CNICs are masked in the browser before
+   anything is sent. The textarea shows the redacted text — what is
+   sent is what is shown — with the note "This text was sent to
+   SaylientAI automatically".
+8. **Honest failures.** No mock or demo suggestions anywhere. Offline
+   / unreachable API, 429, 503, validation errors and empty
+   extraction each get their own honest state with a Retry where it
+   makes sense. 429 also auto-pauses auto-analyze.
+9. **Feedback is local only.** Thumbs up/down (plus an optional
+   reason) is stored only in `chrome.storage.local`, keyed by
+   `suggestion_id`, and labelled "stored only in this browser". The
+   `/feedback` endpoint does not exist in this API build, so the
+   extension never fakes a feedback POST.
+
+## Features
+
+- Side panel via toolbar click or `Ctrl+Shift+S` (`Cmd+Shift+S` on Mac).
+- Auto-extract in priority order: (1) your text selection, (2) the
+  last 8 messages in known chat containers, (3) visible main text.
+  Capped at 2000 characters, tail wins, marked `… (truncated)`.
+- Tone chips: polite / friendly / firm / formal (the API's exact
+  enum; default polite). The selected tone is sent for the next
+  request; the 3 returned reply cards are rendered exactly as
+  returned, labelled by their tone.
+- Optional goal input (max 300 chars, free text, sent as `goal`).
+  `context` / `directness` are not sent — backend defaults apply.
+- Score (integer 0–100), scenario, strategy, explanation, and a
+  small "engine: rule-based / LLM" honesty line from the API's
+  `source` / `llm_status` fields.
+- Per-card Copy, two-step Insert, Regenerate (re-calls `/v1/suggest`
+  only), Feedback (local only), Clear, "Pause auto-analyze" toggle
+  (kept in `chrome.storage.session` only, default unpaused), and a
+  Re-analyze button that is always available.
+- Dark / light toggle (Neumorphism, approved 60/30/10 palette from
+  Phase 4: Polar White `#F1F3F4`, Glacier Blue `#9CBDE0`, Storm Grey
+  `#5A6268` / Matte Black `#1C1D20`, Safety Orange `#FF5F00` touches
+  only; dark mode Ink Navy `#171C28` + Pearl White `#F2F4F6`).
+  Semantic HTML, labelled controls, visible focus, keyboard-only
+  operation, Escape closes the Settings section, `prefers-reduced-motion`
+  respected. All page-derived and API text is rendered with
+  `textContent`, never `innerHTML`.
+- Settings section: configurable API base URL (default
+  `http://localhost:8000`, stored in `chrome.storage.local`). The
+  service worker enforces a 20 s fetch timeout with one retry on a
+  network timeout only — never on 429.
+- Icons are generated by `tools/make_icons.py` (stdlib-only Python,
+  no external assets).
+
+## Platforms
+
+Per-site extractors (message containers + compose box) exist for the
+5 spec platforms only:
+
+| Platform | Support |
+|---|---|
+| Gmail (`mail.google.com`) | Per-site |
+| LinkedIn messaging (`linkedin.com`) | Per-site |
+| Upwork messages (`upwork.com`) | Per-site |
+| Fiverr conversations (`fiverr.com`) | Per-site |
+| WhatsApp Web (`web.whatsapp.com`) | Per-site |
+| Instagram, Messenger, Telegram, Snapchat, TikTok, Discord, X, Slack, Teams | Generic fallback only (selection → visible text) |
+
+The 9 generic platforms have no per-site selectors and no per-site
+support is claimed for them anywhere. All adapters are best-effort:
+if a site layout changes, extraction falls back gracefully to
+selection / visible text. Password fields, payment fields and hidden
+elements are never read.
+
+## Privacy: what is read, sent and stored
+
+- **Read:** conversation text from the current tab, only while the
+  side panel is open on that tab. Nothing is read on page load, in
+  the background, or when the panel is closed.
+- **Sent:** the redacted text (+ tone + optional goal) to the
+  configured API base URL, `POST /v1/analyze` then `POST /v1/suggest`.
+  No account data, no tokens, no page URL is sent. Service-worker
+  logs never contain message text.
+- **Stored:** API base URL (`chrome.storage.local`), theme
+  preference (`chrome.storage.local`), feedback keyed by
+  `suggestion_id` (`chrome.storage.local`), pause state
+  (`chrome.storage.session` only). No history is stored by the
+  extension; no message text is stored.
+- **Not built:** accounts/sign-in, history, templates, usage
+  dashboard, and any server-side feedback — the API in this build
+  has no auth, history or feedback endpoints, and the extension does
+  not pretend otherwise. The production API origin
+  `https://api.saylient.example/*` in the manifest is the placeholder
+  domain from the spec: replace it with the real deployed API origin
+  before any release.
+
+## Install (load unpacked)
+
+1. Open `chrome://extensions`.
+2. Turn on **Developer mode** (top right).
+3. Click **Load unpacked** and choose this folder
+   (`apps/extension/`), or unzip `dist/saylient-extension.zip` first
+   and choose the unzipped folder.
+4. Pin SaylientAI, open a conversation page, and press
+   `Ctrl+Shift+S` (or click the toolbar icon).
+5. In the panel's Settings, set the API base URL to your running API
+   (default `http://localhost:8000`; start it from `apps/api/`).
+
+## Layout
+
+```
+manifest.json            MV3 manifest (permissions, CSP, shortcut)
+sidepanel.html/.css/.js  Panel UI + logic (Neumorphism, textContent only)
+background.js            Service worker: API relay, config, shortcut
+content/extractor.js     Listener-only content script + Insert
+lib/redact.js            Pure PII redactor (email/phone/card/IBAN/CNIC)
+lib/extract.js           Pure extraction logic (priority, truncation, visibility)
+lib/util.js              Pure debounce / throttle helpers
+icons/                   16/48/128 PNG, generated by tools/make_icons.py
+tools/make_icons.py      Stdlib-only icon generator
+tools/package.py         Builds dist/saylient-extension.zip (exact file list)
+tests/                   Node node:test suite, zero dependencies
+```
+
+## Tests and packaging
+
+```sh
+node --test tests/                 # redactor, extractor, timing, manifest
+python3 tools/make_icons.py        # regenerate icons (stdlib only)
+python3 tools/package.py           # dist/saylient-extension.zip
+```
+
+The manifest test checks JSON validity, the exact permission/host
+lists, the CSP, the absence of `<all_urls>` / `identity`, the
+14-platform content-script matches, and greps the shipped JavaScript
+for `eval`, remote-code and `innerHTML` patterns. Browser loading is
+verified separately by loading the unpacked extension in Chromium —
+it is not claimed here.
