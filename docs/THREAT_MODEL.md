@@ -22,7 +22,7 @@ Browser/page content (untrusted) -> extension -> API -> inference service -> dat
 | T9 | DB breach exposes messages | Info disclosure | App-level encryption, minimal retention, key rotation |
 | T10 | Abuse / spam / cost exhaustion | DoS | Quotas, captcha on signup, timeouts, max tokens |
 | T11 | Training-data poisoning | Tampering | Source tracking, review, frozen test set |
-| T12 | Sensitive field captured by extension | Info disclosure | Skip password/payment inputs, PII redaction, explicit trigger |
+| T12 | Sensitive field captured by extension | Info disclosure | Skip password/payment inputs, PII redaction, panel-open trigger; nothing is read when the panel is closed |
 | T13 | Log leakage of content | Info disclosure | Content-free structured logs, Sentry scrubbing |
 | T14 | Replay of extension token from another origin | Spoofing | Origin checks, short TTL, token bound to extension ID |
 
