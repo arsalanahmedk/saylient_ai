@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SaylientAI</title>
+<link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+<header class="panel-head">
+  <div class="brand-lock">
+    <span class="brand-mark" aria-hidden="true">S</span>
+    <p class="brand">SaylientAI <small>Reply suggestions</small></p>
+  </div>
+  <button type="button" id="themeToggle" class="theme-btn" aria-pressed="false" aria-label="Switch to dark mode">
+    <span class="theme-label" id="themeLabel">Dark</span>
+  </button>
+</header>
+
+<main>
+  <p class="status-line" id="statusLine" role="status" aria-live="polite">Opening: reading the conversation on this page…</p>
+
+  <section class="card" aria-labelledby="conversationHeading">
+    <h2 id="conversationHeading">Conversation text</h2>
+    <p class="note">This text was sent to SaylientAI automatically</p>
+    <label class="field-label" for="extractedText">Text sent for suggestions</label>
+    <textarea id="extractedText" rows="6" maxlength="2000" placeholder="No conversation text found — paste text or select a message"></textarea>
+    <p class="char-row"><span class="char-count" id="charCount">0 / 2000</span></p>
+    <p class="hint" id="extractionHint"></p>
+    <div class="row">
+      <button type="button" id="reanalyzeBtn" class="btn btn-primary">Re-analyze</button>
+      <button type="button" id="clearBtn" class="btn btn-ghost">Clear</button>
+    </div>
+    <button type="button" id="newMessagesBtn" class="btn btn-ghost new-messages" hidden>New messages detected — Re-analyze</button>
+    <label class="pause-row" for="pauseToggle">
+      <input type="checkbox" id="pauseToggle">
+      <span>Pause auto-analyze</span>
+    </label>
+    <label class="field-label" for="goalInput">Goal (optional)</label>
+    <input type="text" id="goalInput" maxlength="300" placeholder="For example: ask for payment politely">
+  </section>
+
+  <section class="card" aria-labelledby="toneHeading">
+    <h2 id="toneHeading">Tone</h2>
+    <div class="tones" role="group" aria-label="Reply tone">
+      <button type="button" class="tone" data-tone="polite" aria-pressed="true">Polite</button>
+      <button type="button" class="tone" data-tone="friendly" aria-pressed="false">Friendly</button>
+      <button type="button" class="tone" data-tone="firm" aria-pressed="false">Firm</button>
+      <button type="button" class="tone" data-tone="formal" aria-pressed="false">Formal</button>
+    </div>
+  </section>
+
+  <div id="skeleton" class="card skeleton" hidden aria-hidden="true">
+    <div class="sk-line"></div>
+    <div class="sk-line"></div>
+    <div class="sk-line short"></div>
+    <p class="sk-text">Generating suggestions…</p>
+  </div>
+
+  <section id="errorBox" class="card error-box" hidden aria-labelledby="errorHeading">
+    <h2 id="errorHeading">Could not get suggestions</h2>
+    <p id="errorMessage"></p>
+    <button type="button" id="retryBtn" class="btn btn-primary">Retry</button>
+  </section>
+
+  <section id="emptyBox" class="card" hidden aria-labelledby="emptyHeading">
+    <h2 id="emptyHeading">No conversation text found</h2>
+    <p>No conversation text found — paste text or select a message, then press Re-analyze.</p>
+  </section>
+
+  <section id="resultsBox" class="card" hidden aria-labelledby="resultsHeading">
+    <h2 id="resultsHeading">Suggestions</h2>
+    <p class="meta-line" id="analysisLine"></p>
+    <p class="meta-line"><strong>Politeness score:</strong> <span id="scoreValue">–</span> / 100</p>
+    <p class="meta-line"><strong>Scenario:</strong> <span id="scenarioValue">–</span></p>
+    <p class="meta-line"><strong>Strategy:</strong> <span id="strategyValue">–</span></p>
+    <p id="explanationText"></p>
+    <p class="engine-line" id="engineLine"></p>
+    <div id="replyCards"></div>
+    <div class="row">
+      <button type="button" id="regenerateBtn" class="btn btn-ghost">Regenerate</button>
+    </div>
+  </section>
+
+  <details class="card settings" id="settingsDetails">
+    <summary>Settings</summary>
+    <div class="settings-body">
+      <label class="field-label" for="apiBaseInput">API base URL</label>
+      <input type="url" id="apiBaseInput" inputmode="url" placeholder="http://localhost:8000">
+      <p class="hint">Used for the suggestion API. No sign-in is used by this extension.</p>
+      <div class="row">
+        <button type="button" id="saveApiBtn" class="btn btn-ghost">Save API URL</button>
+      </div>
+      <p class="hint" id="apiSavedNote" role="status" aria-live="polite"></p>
+      <p class="hint">No sign-in: this build works without an account. Feedback below is stored only in this browser.</p>
+    </div>
+  </details>
+
+  <p class="footer-note">SaylientAI never sends or inserts a reply on its own. Copy needs a click; Insert needs two clicks and only writes into the compose box.</p>
+</main>
+
+<script src="lib/redact.js"></script>
+<script src="lib/extract.js"></script>
+<script src="lib/util.js"></script>
+<script src="sidepanel.js"></script>
+</body>
+</html>
