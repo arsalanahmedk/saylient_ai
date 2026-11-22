@@ -4,11 +4,11 @@ Last updated: [date]
 
 ## What we collect
 - **Account data:** email, hashed password.
-- **Message text:** only the text you submit or explicitly trigger the extension to read.
+- **Message text:** only the text the open side panel reads automatically while it is open on a conversation page (nothing is read when the panel is closed).
 - **Usage data:** feature use and feedback ratings (no message content in analytics).
 
 ## What we do not do
-- We do not read pages in the background. The extension reads text only after you press the shortcut or button.
+- We do not read pages in the background. The extension reads text only while its side panel is open; opening the panel is the trigger, and nothing is read when the panel is closed.
 - We do not read password or payment fields.
 - We do not send messages on your behalf.
 - We do not sell your data or use it for advertising.
